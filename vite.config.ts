@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 
 export default defineConfig({
-  base: '/landing-page-update/', // 👈 TÊN REPO GITHUB (BẮT BUỘC)
+  base: '/',
   plugins: [react()],
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
