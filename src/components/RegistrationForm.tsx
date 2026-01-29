@@ -7,46 +7,49 @@ export function RegistrationForm() {
     fullName: "",
     phone: "",
     email: "",
-    program: "",
+    programs: [] as string[],
   });
   const [submitted, setSubmitted] = useState(false);
 
   const programs = [
-    "Ứng dụng Phần mềm",
-    "Thiết kế Web",
-    "Trí tuệ Nhân tạo – AI",
-    "Thiết kế Đồ họa",
-    "Thiết kế Nội thất",
+    "Ứng dụng phần mềm",
+    "Thiết kế web",
+    "Trí tuyệ nhân tạo - AI",
+    "Thiết kế đồ họa",
+    "Thiết kế nội thất",
   ];
 
-const handleSubmit = (e: React.FormEvent) => {
+const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 
   // 1. HIỂN THỊ THÀNH CÔNG NGAY LẬP TỨC
   setSubmitted(true);
 
   // 2. Chuẩn bị dữ liệu gửi đi
-  const formBody = new URLSearchParams({
-    fullname: formData.fullName,
-    phone: formData.phone,
-    email: formData.email,
-    major: formData.program,
-  }).toString();
+  const googleFormData = new FormData();
+  googleFormData.append('entry.1707859756', formData.fullName); // Họ và tên
+  googleFormData.append('entry.76850136', formData.phone); // Số điện thoại
+  googleFormData.append('entry.72301322', formData.email); // Email
+  
+  // Thêm từng ngành quan tâm được chọn
+  formData.programs.forEach(program => {
+    googleFormData.append('entry.1395635480', program);
+  });
 
   // 3. Gửi dữ liệu
-  fetch(
-    "https://script.google.com/macros/s/xxxxxxxxxxxx/exec",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: formBody,
-    }
-  ).catch((error) => {
+  try {
+    await fetch(
+      "https://docs.google.com/forms/d/e/1FAIpQLSfGWAA2nPoUsalF05COde_kWGk-frhKfuLPm9khRJaAC32iFA/formResponse",
+      {
+        method: "POST",
+        mode: "no-cors",
+        body: googleFormData,
+      }
+    );
+  } catch (error) {
     // Chỉ log để dev debug
     console.error("Submit error:", error);
-  });
+  }
 
   // 4. Reset form & UI sau 3 giây
   setTimeout(() => {
@@ -55,7 +58,7 @@ const handleSubmit = (e: React.FormEvent) => {
       fullName: "",
       phone: "",
       email: "",
-      program: "",
+      programs: [],
     });
   }, 3000);
 };
@@ -68,6 +71,15 @@ const handleSubmit = (e: React.FormEvent) => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleProgramToggle = (program: string) => {
+    setFormData(prev => ({
+      ...prev,
+      programs: prev.programs.includes(program)
+        ? prev.programs.filter(p => p !== program)
+        : [...prev.programs, program]
+    }));
   };
 
   return (
@@ -135,7 +147,7 @@ const handleSubmit = (e: React.FormEvent) => {
                       <Phone className="w-5 h-5" />
                     </div>
                     <input
-                      type="tel"
+                      type="text"
                       id="phone"
                       name="phone"
                       value={formData.phone}
@@ -158,7 +170,7 @@ const handleSubmit = (e: React.FormEvent) => {
                       <Mail className="w-5 h-5" />
                     </div>
                     <input
-                      type="email"
+                      type="text"
                       id="email"
                       name="email"
                       value={formData.email}
@@ -173,42 +185,54 @@ const handleSubmit = (e: React.FormEvent) => {
 
                 {/* Program Selection */}
                 <div>
-                  <label htmlFor="program" className="block text-gray-700 mb-2">
-                    Ngành quan tâm *
-                  </label>
-                  <div className="relative">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                      <GraduationCap className="w-5 h-5" />
+                  <label className="block text-gray-700 mb-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <GraduationCap className="w-5 h-5 text-gray-400" />
+                      <span>Ngành quan tâm * (có thể chọn nhiều)</span>
                     </div>
-                    <select
-                      id="program"
-                      name="program"
-                      value={formData.program}
-                      onChange={handleChange}
-                      required
-                      className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all appearance-none cursor-pointer"
-                      style={{ '--tw-ring-color': 'rgb(177, 17, 22)' } as React.CSSProperties}
-                    >
-                      <option value="">Chọn ngành học</option>
-                      {programs.map((program, index) => (
-                        <option key={index} value={program}>
-                          {program}
-                        </option>
-                      ))}
-                    </select>
+                  </label>
+                  <div className="space-y-3">
+                    {programs.map((program, index) => (
+                      <label
+                        key={index}
+                        className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={formData.programs.includes(program)}
+                          onChange={() => handleProgramToggle(program)}
+                          className="w-4 h-4 rounded border-gray-300 focus:ring-2 focus:ring-offset-0"
+                          style={{ 
+                            accentColor: 'rgb(217, 22, 28)',
+                            '--tw-ring-color': 'rgb(177, 17, 22)' 
+                          } as React.CSSProperties}
+                        />
+                        <span className="text-gray-700">{program}</span>
+                      </label>
+                    ))}
                   </div>
+                  {formData.programs.length === 0 && (
+                    <p className="text-sm text-gray-500 mt-2">Vui lòng chọn ít nhất một ngành quan tâm</p>
+                  )}
                 </div>
 
                 {/* Submit Button */}
                 <motion.button
                   type="submit"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full py-4 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 group"
+                  disabled={formData.programs.length === 0}
+                  whileHover={{ scale: formData.programs.length > 0 ? 1.02 : 1 }}
+                  whileTap={{ scale: formData.programs.length > 0 ? 0.98 : 1 }}
+                  className={`w-full py-4 text-white rounded-lg shadow-lg transition-all duration-300 flex items-center justify-center gap-2 group ${
+                    formData.programs.length === 0 
+                      ? 'opacity-50 cursor-not-allowed' 
+                      : 'hover:shadow-xl'
+                  }`}
                   style={{ background: 'rgb(217, 22, 28)' }}
                 >
                   Đăng ký ngay
-                  <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <Send className={`w-5 h-5 transition-transform ${
+                    formData.programs.length > 0 ? 'group-hover:translate-x-1' : ''
+                  }`} />
                 </motion.button>
 
                 <p className="text-sm text-gray-500 text-center">
