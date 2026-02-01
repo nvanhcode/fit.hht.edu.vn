@@ -22,36 +22,29 @@ export function RegistrationForm() {
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 
-  // 1. HIỂN THỊ THÀNH CÔNG NGAY LẬP TỨC
+  
   setSubmitted(true);
 
-  // 2. Chuẩn bị dữ liệu gửi đi
-  const googleFormData = new FormData();
-  googleFormData.append('entry.1707859756', formData.fullName); // Họ và tên
-  googleFormData.append('entry.76850136', formData.phone); // Số điện thoại
-  googleFormData.append('entry.72301322', formData.email); // Email
   
-  // Thêm từng ngành quan tâm được chọn
-  formData.programs.forEach(program => {
-    googleFormData.append('entry.1395635480', program);
-  });
+  const formBody = new URLSearchParams();
+  formBody.append("fullname", formData.fullName);
+  formBody.append("phone", formData.phone);
+  formBody.append("email", formData.email);
+  formBody.append("major", formData.programs.join(", ")); // gộp nhiều ngành
 
-  // 3. Gửi dữ liệu
   try {
     await fetch(
-      "https://docs.google.com/forms/d/e/1FAIpQLSfGWAA2nPoUsalF05COde_kWGk-frhKfuLPm9khRJaAC32iFA/formResponse",
+      "https://script.google.com/macros/s/AKfycbzZleWwpdDOYc5ekcHc45g3dsWHY21haoBSldKyPzgpzHb_fv8UmI8SVrEvOwlpyfcFUw/exec", // URL SHEET
       {
         method: "POST",
-        mode: "no-cors",
-        body: googleFormData,
+        body: formBody,
       }
     );
-  } catch (error) {
-    // Chỉ log để dev debug
-    console.error("Submit error:", error);
+  } catch (err) {
+    console.error("Submit error:", err);
   }
 
-  // 4. Reset form & UI sau 3 giây
+  // 3. Reset UI
   setTimeout(() => {
     setSubmitted(false);
     setFormData({
