@@ -17,7 +17,7 @@ interface ProgramData {
   description: string;
   whatYouLearn: string[];
   careers: string[];
-  trend: string;
+  trend: string | string[];
   salary: string;
   color: string;
   images: string[];
@@ -40,6 +40,18 @@ export function Programs() {
       return `https://www.youtube.com/embed/${match[1]}`;
     }
     return null;
+  };
+
+  const renderTrendText = (text: string) => {
+    const parts = text.split(/(<strong>.*?<\/strong>)/g).filter(Boolean);
+
+    return parts.map((part, idx) => {
+      if (part.startsWith("<strong>") && part.endsWith("</strong>")) {
+        return <strong key={idx}>{part.replace(/<\/?.*?>/g, "")}</strong>;
+      }
+
+      return <span key={idx}>{part}</span>;
+    });
   };
 
   const programs: ProgramData[] = [
@@ -97,7 +109,7 @@ export function Programs() {
         "https://raw.githubusercontent.com/sonnb-cell/landing-page/refs/heads/main/aa500f7fd16a5e34077b.jpg",
       ],
       videoUrl:
-        "https://s.tmimgcdn.com/scr/800x500/297700/flex-it--business-services-amp-it-solutions-multipurpose-html5-responsive-website-template_297700-11-original.jpg",
+        "https://img.magnific.com/free-photo/web-design-concept-with-drawings_1134-77.jpg?semt=ais_test_b&w=740&q=80",
     },
     {
       icon: Brain,
@@ -130,7 +142,7 @@ export function Programs() {
       icon: Palette,
       title: "Thiết kế Đồ họa",
       description:
-        "Biến ý tưởng của bạn thành trải nghiệm hình ảnh ấn tượng, thu hút khách hàng và truyền tải thông điệp mạnh mẽ.",
+        "<strong>Miễn giảm 100% học phí</strong> theo nghị quyết của thành phố Hà Nội năm 2026. Dành cho sinh viên có đam mê đồ họa.",
       whatYouLearn: [
         "Mỹ thuật – Cơ sở tạo hình",
         "Nguyên tắc thiết kế và lý thuyết màu sắc",
@@ -147,8 +159,10 @@ export function Programs() {
         "Nhà thiết kế truyền thông số",
         "Freelance Designer",
       ],
-      trend:
+      trend: [
         "Nhu cầu tăng cao cho nội dung số, thương hiệu và thiết kế mạng xã hội",
+        "<strong>Miễn giảm 100% học phí</strong> cho sinh viên có hộ khẩu thường trú tại Hà Nội",
+      ],
       salary: "7–10 triệu VNĐ/tháng",
       color: "from-pink-500 to-rose-500",
       images: [
@@ -226,7 +240,7 @@ export function Programs() {
                       {program.title}
                     </h2>
                     <p className="text-gray-600 text-lg">
-                      {program.description}
+                      {renderTrendText(program.description)}
                     </p>
                   </div>
 
@@ -279,9 +293,17 @@ export function Programs() {
                           Xu hướng 2026
                         </span>
                       </div>
-                      <p className="text-gray-600 text-base">
-                        {program.trend}
-                      </p>
+                      {Array.isArray(program.trend) ? (
+                        <ul className="list-disc pl-5 text-gray-600 text-base space-y-1">
+                          {program.trend.map((item, idx) => (
+                            <li key={idx}>{renderTrendText(item)}</li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-gray-600 text-base">
+                          {renderTrendText(program.trend)}
+                        </p>
+                      )}
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-2">
