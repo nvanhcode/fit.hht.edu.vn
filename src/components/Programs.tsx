@@ -142,7 +142,7 @@ export function Programs() {
       icon: Palette,
       title: "Thiết kế Đồ họa",
       description:
-        "<strong>Miễn giảm 100% học phí</strong> theo nghị quyết của thành phố Hà Nội năm 2026. Dành cho sinh viên có đam mê đồ họa.",
+        "<strong>Miễn giảm 100% học phí</strong> (cho đến khi hết chỉ tiêu) theo nghị quyết của thành phố Hà Nội năm 2026. Dành cho sinh viên có đam mê đồ họa.",
       whatYouLearn: [
         "Mỹ thuật – Cơ sở tạo hình",
         "Nguyên tắc thiết kế và lý thuyết màu sắc",
@@ -161,7 +161,7 @@ export function Programs() {
       ],
       trend: [
         "Nhu cầu tăng cao cho nội dung số, thương hiệu và thiết kế mạng xã hội",
-        "<strong>Miễn giảm 100% học phí</strong> cho sinh viên có hộ khẩu thường trú tại Hà Nội",
+        "<strong>Miễn giảm 100% học phí</strong> (cho đến khi hết chỉ tiêu) cho sinh viên có hộ khẩu thường trú tại Hà Nội",
       ],
       salary: "7–10 triệu VNĐ/tháng",
       color: "from-pink-500 to-rose-500",
