@@ -14,7 +14,7 @@ export function RegistrationForm() {
   const programs = [
     "Ứng dụng phần mềm",
     "Thiết kế web",
-    "Trí tuyệ nhân tạo - AI",
+    "Trí tuệ nhân tạo - AI",
     "Thiết kế đồ họa",
     "Thiết kế nội thất",
   ];
