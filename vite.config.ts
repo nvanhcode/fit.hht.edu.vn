@@ -3,7 +3,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 
-export default defineConfig({
+export default defineConfig(({ isSsrBuild }) => ({
   base: '/',
   plugins: [react()],
   resolve: {
@@ -53,10 +53,12 @@ export default defineConfig({
   build: {
     target: 'esnext',
     outDir: 'docs', // 👈 đổi sang docs
+    // Bản SSR chỉ dùng để prerender; đuôi .mjs để Node chạy được dạng ES module
+    rollupOptions: isSsrBuild ? { output: { entryFileNames: '[name].mjs' } } : undefined,
   },
 
   server: {
     port: 3000,
     open: true,
   },
-});
+}));

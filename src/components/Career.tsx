@@ -41,7 +41,7 @@ export function Career() {
   ];
 
   return (
-    <section className="py-20 text-white relative overflow-hidden" style={{ background: 'rgb(217, 22, 28)' }}>
+    <section id="co-hoi-nghe-nghiep" className="py-20 text-white relative overflow-hidden" style={{ background: 'rgb(217, 22, 28)' }}>
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0" style={{

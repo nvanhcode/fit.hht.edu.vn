@@ -14,11 +14,13 @@ export default function App() {
 
   return (
     <div className="min-h-screen">
-      <Hero />
-      <About />
-      <Programs />
-      <Career />
-      <RegistrationForm />
+      <main>
+        <Hero />
+        <About />
+        <Programs />
+        <Career />
+        <RegistrationForm />
+      </main>
       <Footer />
 
       {/* Floating Action Button */}

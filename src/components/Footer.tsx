@@ -10,7 +10,8 @@ export function Footer() {
             <div className="flex items-center gap-2 mb-4">
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC5_NkY9YsUuLK9aBoQbRp7sLJKfRGUzp3Ew&s"
-                alt="HHT Logo"
+                alt="Logo Trường Cao đẳng Công nghệ Cao Hà Nội (HHT)"
+                loading="lazy"
                 className="h-10 w-auto object-contain rounded-md"
               />
               {/* Mobile: Full text */}
@@ -25,62 +26,62 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="mb-4">Liên kết nhanh</h4>
+            <h2 className="heading-h4 mb-4">Liên kết nhanh</h2>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-blue-100 hover:text-white transition-colors">Giới thiệu</a>
+                <a href="#gioi-thieu" className="text-blue-100 hover:text-white transition-colors">Giới thiệu</a>
               </li>
               <li>
-                <a href="#" className="text-blue-100 hover:text-white transition-colors">Chương trình đào tạo</a>
+                <a href="#nganh-hoc" className="text-blue-100 hover:text-white transition-colors">Chương trình đào tạo</a>
               </li>
               <li>
-                <a href="#" className="text-blue-100 hover:text-white transition-colors">Tuyển sinh</a>
+                <a href="#registration-form" className="text-blue-100 hover:text-white transition-colors">Tuyển sinh</a>
               </li>
               <li>
-                <a href="#" className="text-blue-100 hover:text-white transition-colors">Đời sống sinh viên</a>
+                <a href="#gioi-thieu" className="text-blue-100 hover:text-white transition-colors">Đời sống sinh viên</a>
               </li>
               <li>
-                <a href="#" className="text-blue-100 hover:text-white transition-colors">Hỗ trợ nghề nghiệp</a>
+                <a href="#co-hoi-nghe-nghiep" className="text-blue-100 hover:text-white transition-colors">Hỗ trợ nghề nghiệp</a>
               </li>
             </ul>
           </div>
 
           {/* Programs */}
           <div>
-            <h4 className="mb-4">Ngành học</h4>
+            <h2 className="heading-h4 mb-4">Ngành học</h2>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-blue-100 hover:text-white transition-colors">Ứng dụng Phần mềm</a>
+                <a href="#ung-dung-phan-mem" className="text-blue-100 hover:text-white transition-colors">Ứng dụng Phần mềm</a>
               </li>
               <li>
-                <a href="#" className="text-blue-100 hover:text-white transition-colors">Thiết kế Web</a>
+                <a href="#thiet-ke-web" className="text-blue-100 hover:text-white transition-colors">Thiết kế Web</a>
               </li>
               <li>
-                <a href="#" className="text-blue-100 hover:text-white transition-colors">Trí tuệ Nhân tạo</a>
+                <a href="#tri-tue-nhan-tao" className="text-blue-100 hover:text-white transition-colors">Trí tuệ Nhân tạo</a>
               </li>
               <li>
-                <a href="#" className="text-blue-100 hover:text-white transition-colors">Thiết kế Đồ họa</a>
+                <a href="#thiet-ke-do-hoa" className="text-blue-100 hover:text-white transition-colors">Thiết kế Đồ họa</a>
               </li>
               <li>
-                <a href="#" className="text-blue-100 hover:text-white transition-colors">Thiết kế Nội thất</a>
+                <a href="#thiet-ke-noi-that" className="text-blue-100 hover:text-white transition-colors">Thiết kế Nội thất</a>
               </li>
             </ul>
           </div>
 
           {/* Contact */}
           <div>
-            <h4 className="mb-4">Liên hệ</h4>
+            <h2 className="heading-h4 mb-4">Liên hệ</h2>
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <MapPin className="w-5 h-5 text-blue-300 flex-shrink-0 mt-0.5" />
-                <span className="text-blue-100">
-                  Trường Cao Đẳng Công Nghệ Cao Hà Nội<br />
-                  Nhuệ Giang, Tây Mỗ, Hà Nội
-                </span>
+                <address className="text-blue-100" style={{ fontStyle: 'normal' }}>
+                  (CS1 – Trụ sở chính) Tầng 3, Trường Cao Đẳng Công Nghệ Cao Hà Nội<br />
+                  Phố Nhuệ Giang, Phường Xuân Phương, TP. Hà Nội
+                </address>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-5 h-5 text-blue-300 flex-shrink-0" />
-                <a href="mailto:tuyensinh@khoait.edu.vn" className="text-blue-100 hover:text-white transition-colors">
+                <a href="mailto:cntt@hht.edu.vn" className="text-blue-100 hover:text-white transition-colors">
                   cntt@hht.edu.vn
                 </a>
               </li>

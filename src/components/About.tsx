@@ -26,7 +26,7 @@ export function About() {
   ];
 
   return (
-    <section className="py-20 bg-white">
+    <section id="gioi-thieu" className="py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left side - Content */}
@@ -79,7 +79,7 @@ export function About() {
                 <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ background: 'rgb(217, 22, 28)' }}>
                   <feature.icon className="w-6 h-6 text-white" />
                 </div>
-                <h4 className="mb-2 text-gray-900">{feature.title}</h4>
+                <h3 className="heading-h4 mb-2 text-gray-900">{feature.title}</h3>
                 <p className="text-base leading-relaxed text-gray-600">{feature.description}</p>
               </motion.div>
             ))}

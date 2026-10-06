@@ -2161,3 +2161,10 @@ footer a, footer li, footer span, footer p {
   inherits: false;
   initial-value: 1;
 }
+
+/* Giữ cỡ chữ h4 khi đổi thẻ heading để đúng thứ bậc SEO */
+.heading-h4 {
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.4;
+}

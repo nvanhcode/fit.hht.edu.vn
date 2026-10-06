@@ -21,3 +21,6 @@ Thumbs.db
 # Editor settings
 .vscode/
 .idea/
+
+# Prerender build tạm
+dist-ssr/

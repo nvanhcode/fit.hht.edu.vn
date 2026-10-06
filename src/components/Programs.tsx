@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { useState } from "react";
 import {
   Code,
   Globe,
@@ -12,6 +13,7 @@ import {
 } from "lucide-react";
 
 interface ProgramData {
+  slug: string;
   icon: typeof Code;
   title: string;
   description: string;
@@ -24,6 +26,51 @@ interface ProgramData {
   videoUrl: string;
 }
 
+// Hiển thị thumbnail trước, chỉ tải iframe YouTube (~1MB) khi người dùng bấm xem
+function YouTubeLite({ videoId, title }: { videoId: string; title: string }) {
+  const [playing, setPlaying] = useState(false);
+
+  if (playing) {
+    return (
+      <iframe
+        src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+        title={title}
+        className="w-full h-80"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      />
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={() => setPlaying(true)}
+      className="relative w-full h-80 block cursor-pointer"
+      aria-label={`Phát video: ${title}`}
+    >
+      <img
+        src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
+        alt={title}
+        loading="lazy"
+        decoding="async"
+        className="w-full h-80 object-cover"
+      />
+      <span
+        className="absolute inset-0 flex items-center justify-center"
+        style={{ background: "rgba(0, 0, 0, 0.25)" }}
+      >
+        <span
+          className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg"
+          style={{ background: "rgb(217, 22, 28)" }}
+        >
+          <Play className="w-8 h-8 text-white" />
+        </span>
+      </span>
+    </button>
+  );
+}
+
 export function Programs() {
   const scrollToForm = () => {
     document
@@ -31,15 +78,12 @@ export function Programs() {
       ?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Helper function to convert YouTube URL to embed URL
-  const getYouTubeEmbedUrl = (url: string): string | null => {
+  // Helper function to extract the video ID from a YouTube URL
+  const getYouTubeId = (url: string): string | null => {
     const youtubeRegex =
       /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
     const match = url.match(youtubeRegex);
-    if (match && match[1]) {
-      return `https://www.youtube.com/embed/${match[1]}`;
-    }
-    return null;
+    return match && match[1] ? match[1] : null;
   };
 
   const renderTrendText = (text: string) => {
@@ -56,6 +100,7 @@ export function Programs() {
 
   const programs: ProgramData[] = [
     {
+      slug: "ung-dung-phan-mem",
       icon: Code,
       title: "Ứng dụng Phần mềm",
       description:
@@ -83,6 +128,7 @@ export function Programs() {
       videoUrl: "https://youtu.be/MZ4XqhuXhIE",
     },
     {
+      slug: "thiet-ke-web",
       icon: Globe,
       title: "Thiết kế Web",
       description:
@@ -112,6 +158,7 @@ export function Programs() {
         "https://img.magnific.com/free-photo/web-design-concept-with-drawings_1134-77.jpg?semt=ais_test_b&w=740&q=80",
     },
     {
+      slug: "tri-tue-nhan-tao",
       icon: Brain,
       title: "Trí tuệ Nhân tạo – AI",
       description:
@@ -139,6 +186,7 @@ export function Programs() {
         "https://i.postimg.cc/kg82MhpX/TS-Livetreams.jpg",
     },
     {
+      slug: "thiet-ke-do-hoa",
       icon: Palette,
       title: "Thiết kế Đồ họa",
       description:
@@ -172,6 +220,7 @@ export function Programs() {
       videoUrl: "https://youtu.be/TkrVKzWMfLU",
     },
     {
+      slug: "thiet-ke-noi-that",
       icon: Home,
       title: "Thiết kế Nội thất",
       description:
@@ -202,14 +251,16 @@ export function Programs() {
   ];
 
   return (
-    <section>
+    <section id="nganh-hoc" aria-label="Các ngành đào tạo">
       {programs.map((program, index) => {
         const isReversed = index % 2 === 1;
         const isFirst = index === 0;
+        const videoId = getYouTubeId(program.videoUrl);
 
         return (
-          <div
+          <article
             key={index}
+            id={program.slug}
             className="min-h-screen flex items-center bg-white relative"
           >
             {/* Logo Space (First Section Only) */}
@@ -246,10 +297,10 @@ export function Programs() {
 
                   {/* What You Will Learn */}
                   <div>
-                    <h4 className="mb-4 text-gray-900 flex items-center gap-2">
-                      <div className="w-1 h-6 rounded-full" style={{ background: 'rgb(217, 22, 28)' }} />
+                    <h3 className="heading-h4 mb-4 text-gray-900 flex items-center gap-2">
+                      <span className="w-1 h-6 rounded-full" style={{ background: 'rgb(217, 22, 28)' }} />
                       Bạn sẽ học gì
-                    </h4>
+                    </h3>
                     <ul className="space-y-2">
                       {program.whatYouLearn.map((item, idx) => (
                         <li
@@ -267,9 +318,9 @@ export function Programs() {
                   <div>
                     <div className="flex items-center gap-2 mb-3">
                       <Briefcase className="w-5 h-5" style={{ color: 'rgb(217, 22, 28)' }} />
-                      <h4 className="text-gray-900">
+                      <h3 className="heading-h4 text-gray-900">
                         Cơ hội nghề nghiệp
-                      </h4>
+                      </h3>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {program.careers.map((career, idx) => (
@@ -346,20 +397,17 @@ export function Programs() {
                 >
                   {/* Main Media Section - Video or Image */}
                   <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                    {getYouTubeEmbedUrl(program.videoUrl) ? (
-                      <iframe
-                        src={
-                          getYouTubeEmbedUrl(program.videoUrl)!
-                        }
-                        title={`${program.title} video`}
-                        className="w-full h-80"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
+                    {videoId ? (
+                      <YouTubeLite
+                        videoId={videoId}
+                        title={`Video giới thiệu ngành ${program.title} - Cao đẳng Công nghệ Cao Hà Nội`}
                       />
                     ) : (
                       <img
                         src={program.videoUrl}
-                        alt={`${program.title} preview`}
+                        alt={`Ngành ${program.title} - Khoa CNTT Cao đẳng Công nghệ Cao Hà Nội`}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-80 object-cover"
                       />
                     )}
@@ -370,14 +418,18 @@ export function Programs() {
                     <div className="rounded-xl overflow-hidden shadow-lg">
                       <img
                         src={program.images[0]}
-                        alt={`${program.title} visual 1`}
+                        alt={`Sinh viên học ngành ${program.title} tại HHT - ảnh 1`}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-48 object-cover hover:scale-105 transition-transform duration-500"
                       />
                     </div>
                     <div className="rounded-xl overflow-hidden shadow-lg">
                       <img
                         src={program.images[1]}
-                        alt={`${program.title} visual 2`}
+                        alt={`Sinh viên học ngành ${program.title} tại HHT - ảnh 2`}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-48 object-cover hover:scale-105 transition-transform duration-500"
                       />
                     </div>
@@ -401,7 +453,7 @@ export function Programs() {
                 </div>
               </motion.div>
             )}
-          </div>
+          </article>
         );
       })}
     </section>

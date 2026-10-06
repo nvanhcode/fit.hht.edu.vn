@@ -8,15 +8,15 @@ export function Hero() {
   const slides = [
     {
       src: "https://raw.githubusercontent.com/sonnb-cell/landing-page/refs/heads/main/25777839333ebc60e52f.jpg",
-      alt: "Teachers of CNTT"
+      alt: "Giảng viên Khoa Công nghệ Thông tin - Cao đẳng Công nghệ Cao Hà Nội"
     },
     {
       src: "https://raw.githubusercontent.com/sonnb-cell/landing-page/refs/heads/main/737fb8566643e91db052.jpg",
-      alt: "Manager and students"
+      alt: "Ban lãnh đạo khoa và sinh viên CNTT trường HHT"
     },
     {
       src: "https://raw.githubusercontent.com/sonnb-cell/landing-page/refs/heads/main/999fd4b40aa185ffdcb0.jpg",
-      alt: "University IT laboratory"
+      alt: "Phòng thực hành công nghệ thông tin của trường HHT"
     }
   ];
 
@@ -30,6 +30,10 @@ export function Hero() {
 
   const scrollToForm = () => {
     document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const scrollToPrograms = () => {
+    document.getElementById('nganh-hoc')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handlePrevSlide = () => {
@@ -52,7 +56,7 @@ export function Hero() {
       >
         <img
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC5_NkY9YsUuLK9aBoQbRp7sLJKfRGUzp3Ew&s"
-          alt="HHT Logo"
+          alt="Logo Trường Cao đẳng Công nghệ Cao Hà Nội (HHT)"
           className="h-20 w-auto max-w-[180px] object-contain drop-shadow-lg transition-transform duration-300 group-hover:scale-105 rounded-md"
         />
       </motion.a>
@@ -128,6 +132,7 @@ export function Hero() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={scrollToPrograms}
                 className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-lg border-2 border-white/30 hover:bg-white/20 transition-all duration-300 whitespace-nowrap text-lg"
               >
                 Khám phá ngành học
