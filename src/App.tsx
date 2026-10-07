@@ -2,6 +2,8 @@ import { Hero } from "./components/Hero";
 import { About } from "./components/About";
 import { Programs } from "./components/Programs";
 import { Career } from "./components/Career";
+import { Admissions } from "./components/Admissions";
+import { FAQ } from "./components/FAQ";
 import { RegistrationForm } from "./components/RegistrationForm";
 import { Footer } from "./components/Footer";
 import { Pen } from "lucide-react";
@@ -18,7 +20,9 @@ export default function App() {
         <Hero />
         <About />
         <Programs />
+        <Admissions />
         <Career />
+        <FAQ />
         <RegistrationForm />
       </main>
       <Footer />

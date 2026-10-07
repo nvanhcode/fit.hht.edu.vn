@@ -110,11 +110,11 @@ export function Hero() {
             </motion.div>
             
             <h1 className="mb-5 md:mb-6 text-white">
-              Tuyển sinh Khoa <span style={{ color: 'rgb(255, 255, 255)' }}>Công nghệ Thông tin</span>
+              Tuyển sinh Cao đẳng <span style={{ color: 'rgb(255, 255, 255)' }}>Công nghệ Thông tin</span> 2026
             </h1>
             
             <p className="text-xl mb-7 md:mb-8 text-blue-50 max-w-xl mx-auto lg:mx-0">
-              Biến đam mê công nghệ của bạn thành sự nghiệp. Tham gia các chương trình đào tạo công nghệ đẳng cấp quốc tế, học hỏi từ những chuyên gia hàng đầu trong môi trường học tập hiện đại.
+              Xét tuyển học bạ, nhận hồ sơ quanh năm. Biến đam mê công nghệ của bạn thành sự nghiệp. Tham gia các chương trình đào tạo công nghệ đẳng cấp quốc tế, học hỏi từ những chuyên gia hàng đầu trong môi trường học tập hiện đại.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8 lg:mb-0">

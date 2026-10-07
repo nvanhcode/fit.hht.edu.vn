@@ -35,10 +35,10 @@ export function Footer() {
                 <a href="#nganh-hoc" className="text-blue-100 hover:text-white transition-colors">Chương trình đào tạo</a>
               </li>
               <li>
-                <a href="#registration-form" className="text-blue-100 hover:text-white transition-colors">Tuyển sinh</a>
+                <a href="#tuyen-sinh" className="text-blue-100 hover:text-white transition-colors">Tuyển sinh 2026</a>
               </li>
               <li>
-                <a href="#gioi-thieu" className="text-blue-100 hover:text-white transition-colors">Đời sống sinh viên</a>
+                <a href="#cau-hoi-thuong-gap" className="text-blue-100 hover:text-white transition-colors">Câu hỏi thường gặp</a>
               </li>
               <li>
                 <a href="#co-hoi-nghe-nghiep" className="text-blue-100 hover:text-white transition-colors">Hỗ trợ nghề nghiệp</a>

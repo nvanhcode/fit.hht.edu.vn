@@ -2168,3 +2168,31 @@ footer a, footer li, footer span, footer p {
   font-weight: 600;
   line-height: 1.4;
 }
+
+/* Class bổ sung cho phần Tuyển sinh & FAQ (index.css là Tailwind đã compile sẵn nên chưa có các class này) */
+.list-disc {
+  list-style-type: disc;
+}
+.list-none {
+  list-style: none;
+}
+.pl-5 {
+  padding-left: 1.25rem;
+}
+.mt-4 {
+  margin-top: 1rem;
+}
+.space-y-1 > :not(:last-child) {
+  margin-bottom: 0.25rem;
+}
+@media (width >= 64rem) {
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+details[open] .group-open\:rotate-180 {
+  transform: rotate(180deg);
+}
