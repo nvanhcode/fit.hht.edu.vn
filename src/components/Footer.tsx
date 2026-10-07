@@ -9,7 +9,7 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC5_NkY9YsUuLK9aBoQbRp7sLJKfRGUzp3Ew&s"
+                src="/icon-192.png"
                 alt="Logo Trường Cao đẳng Công nghệ Cao Hà Nội (HHT)"
                 loading="lazy"
                 className="h-10 w-auto object-contain rounded-md"

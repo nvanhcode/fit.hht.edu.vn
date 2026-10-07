@@ -55,7 +55,7 @@ export function Hero() {
         className="hidden min-[920px]:block absolute top-8 right-6 lg:top-8 lg:right-8 z-20 group"
       >
         <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC5_NkY9YsUuLK9aBoQbRp7sLJKfRGUzp3Ew&s"
+          src="/icon-192.png"
           alt="Logo Trường Cao đẳng Công nghệ Cao Hà Nội (HHT)"
           className="h-20 w-auto max-w-[180px] object-contain drop-shadow-lg transition-transform duration-300 group-hover:scale-105 rounded-md"
         />
