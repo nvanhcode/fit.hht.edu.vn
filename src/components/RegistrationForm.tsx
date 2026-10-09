@@ -1,6 +1,16 @@
 import { motion } from "motion/react";
 import { useState } from "react";
-import { User, Phone, Mail, GraduationCap, Send, CheckCircle } from "lucide-react";
+import { User, Phone, Mail, GraduationCap, Send, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+
+const SHEET_URL =
+  "https://script.google.com/macros/s/AKfycbzZleWwpdDOYc5ekcHc45g3dsWHY21haoBSldKyPzgpzHb_fv8UmI8SVrEvOwlpyfcFUw/exec";
+const SUBMIT_TIMEOUT_MS = 15000;
+
+// SĐT di động VN: 0xxxxxxxxx hoặc +84xxxxxxxxx (đầu số 3, 5, 7, 8, 9)
+const PHONE_REGEX = /^(0|\+84)(3|5|7|8|9)\d{8}$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+type Status = "idle" | "submitting" | "success" | "error";
 
 export function RegistrationForm() {
   const [formData, setFormData] = useState({
@@ -9,7 +19,9 @@ export function RegistrationForm() {
     email: "",
     programs: [] as string[],
   });
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<Status>("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<{ phone?: string; email?: string }>({});
 
   const programs = [
     "Ứng dụng phần mềm",
@@ -19,51 +31,75 @@ export function RegistrationForm() {
     "Thiết kế nội thất",
   ];
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const validate = () => {
+    const errors: { phone?: string; email?: string } = {};
+    const phone = formData.phone.replace(/[\s.-]/g, "");
+    if (!PHONE_REGEX.test(phone)) {
+      errors.phone = "Số điện thoại không hợp lệ (VD: 0912345678)";
+    }
+    if (!EMAIL_REGEX.test(formData.email.trim())) {
+      errors.email = "Email không hợp lệ (VD: email@example.com)";
+    }
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
-  
-  setSubmitted(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (status === "submitting" || !validate()) return;
 
-  
-  const formBody = new URLSearchParams();
-  formBody.append("fullname", formData.fullName);
-  formBody.append("phone", formData.phone);
-  formBody.append("email", formData.email);
-  formBody.append("major", formData.programs.join(", ")); // gộp nhiều ngành
+    setStatus("submitting");
+    setErrorMessage("");
 
-  try {
-    await fetch(
-      "https://script.google.com/macros/s/AKfycbzZleWwpdDOYc5ekcHc45g3dsWHY21haoBSldKyPzgpzHb_fv8UmI8SVrEvOwlpyfcFUw/exec", // URL SHEET
-      {
+    const formBody = new URLSearchParams();
+    formBody.append("fullname", formData.fullName.trim());
+    formBody.append("phone", formData.phone.replace(/[\s.-]/g, ""));
+    formBody.append("email", formData.email.trim());
+    formBody.append("major", formData.programs.join(", ")); // gộp nhiều ngành
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), SUBMIT_TIMEOUT_MS);
+
+    try {
+      const res = await fetch(SHEET_URL, {
         method: "POST",
         body: formBody,
+        signal: controller.signal,
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      // Apps Script trả về { result: "success" } khi ghi vào Sheet thành công
+      const data = await res.json().catch(() => null);
+      if (data?.result !== "success") {
+        throw new Error(data?.error || "Phản hồi không hợp lệ từ máy chủ");
       }
-    );
-  } catch (err) {
-    console.error("Submit error:", err);
-  }
 
-  // 3. Reset UI
-  setTimeout(() => {
-    setSubmitted(false);
-    setFormData({
-      fullName: "",
-      phone: "",
-      email: "",
-      programs: [],
-    });
-  }, 3000);
-};
-
-
-
+      setStatus("success");
+      setFormData({ fullName: "", phone: "", email: "", programs: [] });
+      setTimeout(() => setStatus("idle"), 5000);
+    } catch (err) {
+      console.error("Submit error:", err);
+      setErrorMessage(
+        !navigator.onLine
+          ? "Không có kết nối mạng. Vui lòng kiểm tra Internet và thử lại."
+          : err instanceof DOMException && err.name === "AbortError"
+            ? "Máy chủ phản hồi quá lâu. Vui lòng thử lại."
+            : "Gửi đăng ký không thành công. Vui lòng thử lại."
+      );
+      setStatus("error");
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+    if (e.target.name in fieldErrors) {
+      setFieldErrors({ ...fieldErrors, [e.target.name]: undefined });
+    }
   };
 
   const handleProgramToggle = (program: string) => {
@@ -74,6 +110,8 @@ const handleSubmit = async (e: React.FormEvent) => {
         : [...prev.programs, program]
     }));
   };
+
+  const submitDisabled = formData.programs.length === 0 || status === "submitting";
 
   return (
     <section id="registration-form" className="py-20 bg-white">
@@ -105,7 +143,7 @@ const handleSubmit = async (e: React.FormEvent) => {
             className="rounded-2xl p-8 md:p-12 shadow-xl border"
             style={{ background: 'rgba(217, 22, 28, 0.05)', borderColor: 'rgba(217, 22, 28, 0.2)' }}
           >
-            {!submitted ? (
+            {status !== "success" ? (
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Full Name */}
                 <div>
@@ -140,7 +178,8 @@ const handleSubmit = async (e: React.FormEvent) => {
                       <Phone className="w-5 h-5" />
                     </div>
                     <input
-                      type="text"
+                      type="tel"
+                      inputMode="tel"
                       id="phone"
                       name="phone"
                       value={formData.phone}
@@ -149,8 +188,12 @@ const handleSubmit = async (e: React.FormEvent) => {
                       className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
                       style={{ '--tw-ring-color': 'rgb(177, 17, 22)' } as React.CSSProperties}
                       placeholder="0912 345 678"
+                      aria-invalid={!!fieldErrors.phone}
                     />
                   </div>
+                  {fieldErrors.phone && (
+                    <p className="text-sm mt-2" style={{ color: 'rgb(217, 22, 28)' }}>{fieldErrors.phone}</p>
+                  )}
                 </div>
 
                 {/* Email */}
@@ -163,7 +206,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                       <Mail className="w-5 h-5" />
                     </div>
                     <input
-                      type="text"
+                      type="email"
                       id="email"
                       name="email"
                       value={formData.email}
@@ -172,8 +215,12 @@ const handleSubmit = async (e: React.FormEvent) => {
                       className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
                       style={{ '--tw-ring-color': 'rgb(177, 17, 22)' } as React.CSSProperties}
                       placeholder="email@example.com"
+                      aria-invalid={!!fieldErrors.email}
                     />
                   </div>
+                  {fieldErrors.email && (
+                    <p className="text-sm mt-2" style={{ color: 'rgb(217, 22, 28)' }}>{fieldErrors.email}</p>
+                  )}
                 </div>
 
                 {/* Program Selection */}
@@ -209,23 +256,51 @@ const handleSubmit = async (e: React.FormEvent) => {
                   )}
                 </div>
 
+                {/* Error */}
+                {status === "error" && (
+                  <div
+                    role="alert"
+                    className="flex gap-3 p-4 rounded-lg border"
+                    style={{ background: 'rgba(217, 22, 28, 0.08)', borderColor: 'rgba(217, 22, 28, 0.3)' }}
+                  >
+                    <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" style={{ color: 'rgb(217, 22, 28)' }} />
+                    <div className="text-sm text-gray-700">
+                      <p>{errorMessage}</p>
+                      <p className="mt-1">
+                        Hoặc liên hệ trực tiếp hotline{" "}
+                        <a href="tel:+84909268246" style={{ color: 'rgb(217, 22, 28)' }}>0909268246</a>{" "}
+                        để được tư vấn.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
                 {/* Submit Button */}
                 <motion.button
                   type="submit"
-                  disabled={formData.programs.length === 0}
-                  whileHover={{ scale: formData.programs.length > 0 ? 1.02 : 1 }}
-                  whileTap={{ scale: formData.programs.length > 0 ? 0.98 : 1 }}
+                  disabled={submitDisabled}
+                  whileHover={{ scale: submitDisabled ? 1 : 1.02 }}
+                  whileTap={{ scale: submitDisabled ? 1 : 0.98 }}
                   className={`w-full py-4 text-white rounded-lg shadow-lg transition-all duration-300 flex items-center justify-center gap-2 group ${
-                    formData.programs.length === 0 
-                      ? 'opacity-50 cursor-not-allowed' 
+                    submitDisabled
+                      ? 'opacity-50 cursor-not-allowed'
                       : 'hover:shadow-xl'
                   }`}
                   style={{ background: 'rgb(217, 22, 28)' }}
                 >
-                  Đăng ký ngay
-                  <Send className={`w-5 h-5 transition-transform ${
-                    formData.programs.length > 0 ? 'group-hover:translate-x-1' : ''
-                  }`} />
+                  {status === "submitting" ? (
+                    <>
+                      Đang gửi...
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    </>
+                  ) : (
+                    <>
+                      {status === "error" ? "Thử lại" : "Đăng ký ngay"}
+                      <Send className={`w-5 h-5 transition-transform ${
+                        submitDisabled ? '' : 'group-hover:translate-x-1'
+                      }`} />
+                    </>
+                  )}
                 </motion.button>
 
                 <p className="text-sm text-gray-500 text-center">
